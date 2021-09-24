@@ -2,85 +2,85 @@
     "questions": [
         {
             "type": "multiple-choice",
-            "question": "Which of the following expressions could assign a new value to i?",
+            "questionText": "Which of the following expressions could assign a new value to i?",
             "answers": ["i === i", "i == j", "i += j", "i !== j"],
             "explaination": "\"===\" (strict equal), \"==\" (equal), and \"!==\" (not equal) are each comparison operators, which will not affect the value of i. \"i += j\" uses an assignment operator, specifically an addition assignment, which will add i and j then assign i to that value." 
         },
         {
             "type": "multiple-choice",
-            "question": "Which of these for loops is syntactically correct?",
+            "questionText": "Which of these for loops is syntactically correct?",
             "answers": ["for(i<10; i++; var i)", "for(i++; i<10; var i)", "for(var i=0; i++; i<10)", "for(var i; i<10; i++)"],
             "explaination": "The correct order of operations within a for loop are first instantiate variables, second the condition for which to continue the loop, third to increment your variable"
         },
         {
             "type": "short-answer",
-            "question": "What will be logged to the console when this code is run? <br/> <code>var total=0, max=5;\nfor(var i=1; i<= max; i++) {\n    total += i;\n}\nconsole.log(total)</code>",
+            "questionText": "What will be logged to the console when this code is run? <br/> <code>var total=0, max=5;\nfor(var i=1; i<= max; i++) {\n    total += i;\n}\nconsole.log(total)</code>",
             "answers": "15",
             "explaination":"This code adds the value of i to total during each loop. Since max is 5, this will sum the numbers between 1 and 5 and log them to the console."
         },
         {
             "type": "multiple-choice",
-            "question":"How many times will the console log \"hello world!\"<br/><code>var count=10;\nwhile(count >= 0) {\n    console.log(\"hello world!\");\ncount -= 2;\n}</code>",
+            "questionText":"How many times will the console log \"hello world!\"<br/><code>var count=10;\nwhile(count >= 0) {\n    console.log(\"hello world!\");\ncount -= 2;\n}</code>",
             "answers": ["6", "5", "10", "0"],
             "explaination":"Since the condition for the while loop checks that count is greater than or equal to 0, the "
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         },
         {
             "type": "multiple-choice",
-            "question":"",
+            "questionText":"",
             "answers": [],
             "explaination":""
         }

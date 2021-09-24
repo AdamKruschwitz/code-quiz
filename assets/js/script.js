@@ -2,13 +2,14 @@
 var quizSpace = window.document.getElementById("quiz");
 var testMultipleChoiceQuestion = {
     "type": "multiple-choice",
-    "question": "which of these is a cheese?",
+    "questionText": "which of these is a cheese?",
     "answers": ["burgandy", "salmon", "gouda", "camero"],
     "explaination": "it cheese."
 }
 
 clearQuiz();
-buildStartMenu();
+//buildStartMenu();
+buildQuestion(testMultipleChoiceQuestion);
 
 function buildStartMenu() {
     quizSpace.dataset.state = "start-menu";
@@ -30,3 +31,33 @@ function clearQuiz() {
     quizSpace.innerHTML = "";
 }
 
+// Builds the html for the question
+function buildQuestion(question) {
+    // Build and add the question text
+    let questionText = document.createElement("h2");
+    questionText.setAttribute("class", "questionText");
+    questionText.innerHTML = question.questionText; 
+    quizSpace.appendChild(questionText);
+
+    // Handle the number of answers for each question type
+    let answers = document.createElement("section");
+    answers.setAttribute("class", "answers");
+    switch(question.type) {
+        case "short-answer":
+            // TODO: Short answer question
+            break;
+        
+        case "multiple-choice":
+            // Multiple choice question
+            for(i=0; i<question.answers.length; i++) {
+                let answerBtn = document.createElement("button");
+                answerBtn.setAttribute("class", "answer-btn");
+                answerBtn.innerHTML = question.answers[i];
+                answers.appendChild(answerBtn);
+            }
+            break;
+    }
+    quizSpace.appendChild(answers);
+
+    
+}
