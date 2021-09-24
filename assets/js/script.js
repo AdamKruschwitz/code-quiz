@@ -1,32 +1,47 @@
 // On load, add the main menu to the screen
 var quizSpace = window.document.getElementById("quiz");
+var score;
+var questionsGiven;
+var questions;
+
+// Test variables
 var testMultipleChoiceQuestion = {
     "type": "multiple-choice",
     "questionText": "which of these is a cheese?",
     "answers": ["burgandy", "salmon", "gouda", "camero"],
     "explaination": "it cheese."
 }
+var testShortAnswerQuestion = {
+    "type": "short-answer",
+    "questionText": "how many fingers do you have?",
+    "answers": "10",
+    "explaination": "I hope you got 10 fingies!"
+}
+questions = [testMultipleChoiceQuestion];
 
 clearQuiz();
-//buildStartMenu();
-buildQuestion(testMultipleChoiceQuestion);
+buildStartMenu();
+//buildQuestion(testMultipleChoiceQuestion);
 
 function buildStartMenu() {
     quizSpace.dataset.state = "start-menu";
     let title = document.createElement("h2");
     title.innerHTML = "JavaScript Coding Quiz";
     title.setAttribute("class", "title");
-    console.log(title);
+    //console.log(title);
 
     let startBtn = document.createElement("button");
     startBtn.innerHTML = "Start"
     startBtn.setAttribute("class", "start-btn");
-    console.log(startBtn);
+    //console.log(startBtn);
 
     quizSpace.appendChild(title);
     quizSpace.appendChild(startBtn);
+
+    startBtn.addEventListener("click", startGame);
 }
 
+// Empties the quiz space
 function clearQuiz() {
     quizSpace.innerHTML = "";
 }
@@ -52,12 +67,28 @@ function buildQuestion(question) {
             for(i=0; i<question.answers.length; i++) {
                 let answerBtn = document.createElement("button");
                 answerBtn.setAttribute("class", "answer-btn");
+                answerBtn.setAttribute("data-value", i+1)
                 answerBtn.innerHTML = question.answers[i];
                 answers.appendChild(answerBtn);
             }
             break;
     }
     quizSpace.appendChild(answers);
+}
 
-    
+// Set up game variables and build the question in html
+function startGame() {
+    score = 0;
+    questionsGiven = [];
+    let firstQuestion = selectQuestion();
+
+    // Clear the start menu and build the first question
+    clearQuiz();
+    buildQuestion(firstQuestion);
+}
+
+//TODO: select a random question that hasn't been given to give.
+function selectQuestion() {
+    questionsGiven.push(questions[0]);
+    return questions[0];
 }
