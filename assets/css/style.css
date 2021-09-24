@@ -1,3 +1,13 @@
+* {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+/* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
 #quiz {
     display: flex;
     flex-direction: column;
@@ -8,10 +18,6 @@
 
     border: 5px solid gray;
     border-radius: 20px;
-}
-
-* {
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 
 .question {
