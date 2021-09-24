@@ -11,13 +11,17 @@ body {
 #quiz {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    max-width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 0 0 60%;
 
     border: 5px solid gray;
     border-radius: 20px;
+}
+
+.title {
+    font-size: 50px;
+    line-height: 150%;
 }
 
 .question {
@@ -43,18 +47,26 @@ button {
     border-radius: 15px;
 }
 
-.answer-btn {
-    font-size: 20px;
-    flex: 1 0 2%;
-    margin: 2%;
-}
-
 button:hover {
     background-color: white;
 }
 
 button:focus {
     background-color:darkgray;
+}
+
+.answer-btn {
+    font-size: 20px;
+    flex: 1 0 2%;
+    margin: 2%;
+}
+
+.start-btn {
+    font-size: 28px;
+    flex: 0 0 70%;
+
+    margin-bottom: 20px;
+    padding: 0px 10% 0px 10%;
 }
 
 footer {
