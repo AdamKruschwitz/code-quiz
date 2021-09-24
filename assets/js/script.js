@@ -2,22 +2,26 @@
 var quizSpace = window.document.getElementById("quiz");
 var score;
 var questionsGiven;
-var questions;
+var allQuestions;
+var lastQuestion;
 
 // Test variables
 var testMultipleChoiceQuestion = {
     "type": "multiple-choice",
     "questionText": "which of these is a cheese?",
     "answers": ["burgandy", "salmon", "gouda", "camero"],
-    "explaination": "it cheese."
+    "answer": "3",
+    "explaination": "it cheese.",
+    "result": "unanswered"
 }
 var testShortAnswerQuestion = {
     "type": "short-answer",
     "questionText": "how many fingers do you have?",
-    "answers": "10",
-    "explaination": "I hope you got 10 fingies!"
+    "answer": "10",
+    "explaination": "I hope you got 10 fingies!",
+    "result": "unanswered"
 }
-questions = [testMultipleChoiceQuestion];
+allQuestions = [testMultipleChoiceQuestion];
 
 clearQuiz();
 buildStartMenu();
@@ -69,7 +73,10 @@ function buildQuestion(question) {
                 answerBtn.setAttribute("class", "answer-btn");
                 answerBtn.setAttribute("data-value", i+1)
                 answerBtn.innerHTML = question.answers[i];
+
                 answers.appendChild(answerBtn);
+
+                answerBtn.addEventListener("click", onAnswerClick)
             }
             break;
     }
@@ -89,6 +96,31 @@ function startGame() {
 
 //TODO: select a random question that hasn't been given to give.
 function selectQuestion() {
-    questionsGiven.push(questions[0]);
-    return questions[0];
+    questionsGiven.push(allQuestions[0]);
+    lastQuestion = allQuestions[0];
+    return allQuestions[0];
+}
+
+// A function to handle behavior when a multiple choice answer is clicked.
+function onAnswerClick(event) {
+    // Calculate whether the question was answered correctly
+    console.log(this.dataset.value);
+    let correctAnswer = this.dataset.value === lastQuestion.answer;
+
+    if(correctAnswer) {
+        lastQuestion.result = "correct";
+        score++;
+    }
+    else {
+        lastQuestion.result = "incorrect";
+    }
+
+    console.log(score);
+
+    // Clear the quiz space
+    clearQuiz();
+
+    // Build the next question
+    let nextQuestion = selectQuestion();
+    buildQuestion(nextQuestion);
 }
