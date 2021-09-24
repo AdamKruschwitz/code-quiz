@@ -1,11 +1,13 @@
 // On load, add the main menu to the screen
 var quizSpace = window.document.getElementById("quiz");
+var timerValue;
+var timerEl;
 var score;
 var questionsGiven;
 var allQuestions;
 var lastQuestion;
 
-// Test variables
+// Test variables ============================================
 var testMultipleChoiceQuestion = {
     "type": "multiple-choice",
     "questionText": "which of these is a cheese?",
@@ -22,10 +24,41 @@ var testShortAnswerQuestion = {
     "result": "unanswered"
 }
 allQuestions = [testMultipleChoiceQuestion];
+// ===========================================================
 
 clearQuiz();
+buildTimer();
 buildStartMenu();
-//buildQuestion(testMultipleChoiceQuestion);
+
+function buildTimer() {
+    // Create a timer and put it on the page
+    timerEl = document.createElement("h2");
+    quizSpace.appendChild(timerEl);
+    timerEl.setAttribute("class", "timer");
+    timerValue = 10;
+    updateTimer();
+
+    // Every 1 second, decrease the timer value and update the timer. 
+    var timerInterval = setInterval(function() {
+        timerValue--;
+        updateTimer();
+
+        //If the timer runs out, end the game.
+        if(timerValue == 0) {
+            endGame();
+            clearInterval(timerInterval);
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    timerEl.innerHTML = timerValue;
+}
+
+// TODO: end the game and bring up the stats page
+function endGame() {
+    console.log("run end game");
+}
 
 function buildStartMenu() {
     quizSpace.dataset.state = "start-menu";
