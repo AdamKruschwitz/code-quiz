@@ -23,7 +23,7 @@ var testShortAnswerQuestion = {
     "explaination": "I hope you got 10 fingies!",
     "result": "unanswered"
 }
-allQuestions = [testMultipleChoiceQuestion];
+allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
 // ===========================================================
 
 clearQuiz();
@@ -94,9 +94,29 @@ function buildQuestion(question) {
     // Handle the number of answers for each question type
     let answers = document.createElement("section");
     answers.setAttribute("class", "answers");
+    answers.setAttribute("name", "answers");
     switch(question.type) {
         case "short-answer":
-            // TODO: Short answer question
+            // Short answer question
+            let answerLabel = document.createElement("label");
+            answerLabel.setAttribute("for", "answer");
+            answerLabel.innerHTML = "Answer: ";
+
+            let answerField = document.createElement("input");
+            answerField.setAttribute("class", "answer-field");
+            answerField.setAttribute("type", "text");
+            answerField.setAttribute("id", "answer-field")
+            answerField.setAttribute("name", "answer");
+            
+            let submitBtn = document.createElement("button");
+            submitBtn.setAttribute("class", "submit-btn");
+            submitBtn.innerHTML = "Submit";
+
+            submitBtn.addEventListener("click", onSubmitBtnClick);
+
+            answers.appendChild(answerLabel);
+            answers.appendChild(answerField);
+            answers.appendChild(submitBtn);
             break;
         
         case "multiple-choice":
@@ -109,7 +129,7 @@ function buildQuestion(question) {
 
                 answers.appendChild(answerBtn);
 
-                answerBtn.addEventListener("click", onAnswerClick)
+                answerBtn.addEventListener("click", onAnswerBtnClick)
             }
             break;
     }
@@ -129,25 +149,45 @@ function startGame() {
 
 //TODO: select a random question that hasn't been given to give.
 function selectQuestion() {
-    questionsGiven.push(allQuestions[0]);
-    lastQuestion = allQuestions[0];
-    return allQuestions[0];
+    questionsGiven.push(allQuestions[1]);
+    lastQuestion = allQuestions[1];
+    return allQuestions[1];
 }
 
 // A function to handle behavior when a multiple choice answer is clicked.
-function onAnswerClick(event) {
+function onAnswerBtnClick() {
     // Calculate whether the question was answered correctly
-    console.log(this.dataset.value);
+    // console.log(this.dataset.value);
     let correctAnswer = this.dataset.value === lastQuestion.answer;
 
     if(correctAnswer) {
-        lastQuestion.result = "correct";
         score++;
     }
-    else {
-        lastQuestion.result = "incorrect";
-    }
 
+    lastQuestion.result = this.dataset.value;
+    
+
+    console.log(score);
+
+    // Clear the quiz space
+    clearQuiz();
+
+    // Build the next question
+    let nextQuestion = selectQuestion();
+    buildQuestion(nextQuestion);
+}
+
+function onSubmitBtnClick() {
+    // Store the users answer
+    let answer = this.parentElement.children[1].value;
+    
+    // Calculate whether the question was answered correctly
+    let correctAnswer = answer === lastQuestion.answer;
+
+    // Increment score if correct
+    if(correctAnswer) score++;
+    lastQuestion.result = answer;
+    console.log(answer);
     console.log(score);
 
     // Clear the quiz space
