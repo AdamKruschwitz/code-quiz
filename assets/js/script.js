@@ -27,7 +27,6 @@ allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
 // ===========================================================
 
 clearQuiz();
-buildTimer();
 buildStartMenu();
 
 function buildTimer() {
@@ -35,7 +34,7 @@ function buildTimer() {
     timerEl = document.createElement("h2");
     quizSpace.appendChild(timerEl);
     timerEl.setAttribute("class", "timer");
-    timerValue = 10;
+    timerValue = 2;
     updateTimer();
 
     // Every 1 second, decrease the timer value and update the timer. 
@@ -57,7 +56,8 @@ function updateTimer() {
 
 // TODO: end the game and bring up the stats page
 function endGame() {
-    console.log("run end game");
+    clearQuiz();
+    buildEndGame();
 }
 
 function buildStartMenu() {
@@ -136,7 +136,7 @@ function buildQuestion(question) {
     quizSpace.appendChild(answers);
 }
 
-// Set up game variables and build the question in html
+// Set up game variables and build the question and the timer in html
 function startGame() {
     score = 0;
     questionsGiven = [];
@@ -144,6 +144,7 @@ function startGame() {
 
     // Clear the start menu and build the first question
     clearQuiz();
+    buildTimer();
     buildQuestion(firstQuestion);
 }
 
@@ -162,6 +163,10 @@ function onAnswerBtnClick() {
 
     if(correctAnswer) {
         score++;
+    }
+    else {
+        timerValue -= 10;
+        updateTimer();
     }
 
     lastQuestion.result = this.dataset.value;
@@ -186,14 +191,66 @@ function onSubmitBtnClick() {
 
     // Increment score if correct
     if(correctAnswer) score++;
+    else {
+        timerValue -= 10;
+        updateTimer();
+    }
     lastQuestion.result = answer;
     console.log(answer);
     console.log(score);
 
-    // Clear the quiz space
-    clearQuiz();
-
     // Build the next question
+    clearQuiz();
     let nextQuestion = selectQuestion();
     buildQuestion(nextQuestion);
+}
+
+// builds endGame screen
+function buildEndGame() {
+    // Create the score header
+    let scoreEl = document.createElement("h2");
+    scoreEl.setAttribute("class", "final-score");
+    scoreEl.innerHTML = "Final Score: " + score;
+    quizSpace.appendChild(scoreEl);
+
+    // Create the initials form
+    let initialsContainer = document.createElement("div");
+
+    let initialsLabel = document.createElement("label");
+    initialsLabel.setAttribute("class", "initials-label");
+    initialsLabel.innerHTML = "Initials: ";
+    initialsContainer.appendChild(initialsLabel);
+
+    let initialsField = document.createElement("input");
+    initialsField.setAttribute("class", "initials-field");
+    initialsField.setAttribute("type", "text");
+    initialsContainer.appendChild(initialsField);
+
+    let submitBtn = document.createElement("button");
+    submitBtn.setAttribute("class", "submit-btn");
+    submitBtn.innerHTML = "Submit";
+    initialsContainer.appendChild(submitBtn);
+
+    quizSpace.appendChild(initialsContainer);
+
+    // Set event for submit button
+    submitBtn.addEventListener("click", submitInitials);
+
+}
+
+function submitInitials() {
+    // Get the initials
+    let initials = this.parentElement.children[1].value;
+
+    // Store the initial/score pair in the local storage
+    // BUG: if someone enters the same initials, their score will overwrite the previous.
+    localStorage.setItem(initials, score);
+
+    clearQuiz();
+    buildHighScoreMenu();
+}
+
+// TODO: build the high score table
+function buildHighScoreMenu() {
+    console.log("building high score menu");
 }
