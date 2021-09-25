@@ -252,5 +252,47 @@ function submitInitials() {
 
 // TODO: build the high score table
 function buildHighScoreMenu() {
-    console.log("building high score menu");
+    // Add a header
+    let highScoreHeader = document.createElement("h2");
+    highScoreHeader.setAttribute("class", "high-score");
+    highScoreHeader.innerHTML = "High Scores";
+    quizSpace.appendChild(highScoreHeader);
+
+    // Add a table for high scores
+    let highScoreTable = document.createElement("table");
+    highScoreTable.setAttribute("class", "high-score-table");
+
+    // Add a header row
+    let firstRow = document.createElement("tr");
+
+    let firstRowInitials = document.createElement("th");
+    firstRowInitials.innerHTML = "Initials";
+    firstRow.appendChild(firstRowInitials);
+
+    let firstRowScore = document.createElement("th");
+    firstRowScore.innerHTML = "Score";
+    firstRow.appendChild(firstRowScore);
+
+    highScoreTable.appendChild(firstRow);
+
+    // For each initial/score pair in localStorage, add a row
+    for(let i=0; i<localStorage.length; i++) {
+        let initials = localStorage.key(i);
+        let highScore = localStorage.getItem(initials);
+
+        let newRow = document.createElement("tr");
+
+        let newRowInitials = document.createElement("td");
+        newRowInitials.innerHTML = initials;
+        newRow.appendChild(newRowInitials);
+
+        let newRowScore = document.createElement("td");
+        newRowScore.innerHTML = highScore;
+        newRow.appendChild(newRowScore);
+
+        highScoreTable.appendChild(newRow);
+    }
+
+    quizSpace.appendChild(highScoreTable);
+
 }
