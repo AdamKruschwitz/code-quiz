@@ -6,6 +6,63 @@ var score;
 var questionsGiven;
 var allQuestions;
 var lastQuestion;
+const questions = [
+    {   // Question 1, assignment operators vs comparison operators
+        "type": "multiple-choice",
+        "questionText": "Which of the following expressions could assign a new value to i?",
+        "answers": ["i === i", "i == j", "i += j", "i !== j"],
+        "correctAnswer": 3, // 
+        "explaination": "\"===\" (strict equal), \"==\" (equal), and \"!==\" (not equal) are each comparison operators, which will not affect the value of i. \"i += j\" uses an assignment operator, specifically an addition assignment, which will add i and j then assign i to that value.",
+        "result": "unanswered"
+    },
+    {   // Question 2, for loop syntax
+        "type": "multiple-choice",
+        "questionText": "Which of these for loops is syntactically correct?",
+        "answers": ["for(i<10; i++; var i)", "for(i++; i<10; var i)", "for(var i=0; i++; i<10)", "for(var i=0; i<10; i++)"],
+        "correctAnswer": 3,
+        "explaination": "The correct order of operations within a for loop are first instantiate variables, second the condition for which to continue the loop, third to increment your variable",
+        "result": "unanswered"
+    },
+    {   // Question 3, for loop conceptualization
+        "type": "short-answer",
+        "questionText": "What will be logged to the console when this code is run? <br/> <code>var total=0, max=5;\nfor(var i=1; i<= max; i++) {\n    total += i;\n}\nconsole.log(total)</code>",
+        "correctAnswer": "15",
+        "explaination":"This code adds the value of i to total during each loop. Since max is 5, this will sum the numbers between 1 and 5 and log them to the console.",
+        "result": "unanswered"
+    },
+    {   // Question 4, while loop conceptualization
+        "type": "multiple-choice",
+        "questionText":"How many times will the console log \"hello world!\"<br/><code>var count=10;\nwhile(count >= 0) {\n    console.log(\"hello world!\");\ncount -= 2;\n}</code>",
+        "answers": ["6", "5", "10", "0"],
+        "correctAnswer": 0, // 6
+        "explaination": "Every time the loop runs count will decrease by 2, and the loop will run as long as count is greater than or equal to 0. At the the beginning of each loop when count is checked, it will be 10, 8, 6, 4, 2, 0, then -2. When count is checked and it's -2, the while loop will not run the code again and will advance onto the next block. In all, the loop will run 6 times.",
+        "result": "unanswered"
+    },
+    {   // Question 5, get properties from an element
+        "type": "multiple-choice",
+        "questionText": "Which of these are not a correct way to access a property of a page Element in JavaScript?",
+        "answers": ["element.property", "element.getProperty(\"property\")", "element[\"property\"]", "element::property"],
+        "correctAnswer": 3,
+        "explaination": "You can access the property of an element in javascript in three ways. You can use dot notation (element.property), you can use the getAttribute() method, or you can use object notation (element[property]).",
+        "result": "unanswered"
+    },
+    {   // Question 6, variable scope
+        "type": "short-answer",
+        "questionText": "What is logged to the console when this code is run?\n<code>var temp =\"foo\"2; \nfunction printTemp() {\n    var temp=\"bar\";\n    console.log(temp)\n}\n\nprintTemp();",
+        "correctAnswer": "2",
+        "explaination": "Since the variable temp is created again within the function, it is used instead of the global variable when the function is called.",
+        "result": "unanswered"
+    },
+    {   // Question 7, image tags
+        "type": "multiple-choice",
+        "questionText": "Which of these image tags are formatted correctly?",
+        "answers": ["<img href=\"./assets/image.png\" />", "<img file=\"./assets/image.png\" />", "<img image=\"./assets/image.png\" />", "<img value=\"./assets/image.png\""],
+        "correctAnswer": 1,
+        "explaination": "Image tags must take their image file path through either the href or src properties. Using src will embed the image in the webpage, and href can be used to link to files hosted elsewhere.",
+        "result": "unanswered"
+    }
+    
+]
 
 // Test variables ============================================
 var testMultipleChoiceQuestion = {
@@ -29,12 +86,13 @@ allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
 clearQuiz();
 buildStartMenu();
 
+// Creates timer element and starts timer.
 function buildTimer() {
     // Create a timer and put it on the page
     timerEl = document.createElement("h2");
     quizSpace.appendChild(timerEl);
     timerEl.setAttribute("class", "timer");
-    timerValue = 2;
+    timerValue = 60;
     updateTimer();
 
     // Every 1 second, decrease the timer value and update the timer. 
@@ -50,16 +108,18 @@ function buildTimer() {
     }, 1000);
 }
 
+// Updates timer display
 function updateTimer() {
     timerEl.innerHTML = timerValue;
 }
 
-// TODO: end the game and bring up the stats page
+// Ends the game and bring up the stats page
 function endGame() {
     clearQuiz();
     buildEndGame();
 }
 
+// Builds the start menu
 function buildStartMenu() {
     quizSpace.dataset.state = "start-menu";
     let title = document.createElement("h2");
@@ -148,14 +208,14 @@ function startGame() {
     buildQuestion(firstQuestion);
 }
 
-//TODO: select a random question that hasn't been given to give.
+// TODO: Returns a random question that hasn't been given.
 function selectQuestion() {
     questionsGiven.push(allQuestions[1]);
     lastQuestion = allQuestions[1];
     return allQuestions[1];
 }
 
-// A function to handle behavior when a multiple choice answer is clicked.
+// Takes answer, checks if it's correct, then handles scoring and question tracking and moves to the next question
 function onAnswerBtnClick() {
     // Calculate whether the question was answered correctly
     // console.log(this.dataset.value);
@@ -182,6 +242,7 @@ function onAnswerBtnClick() {
     buildQuestion(nextQuestion);
 }
 
+// Takes answer, checks it, then handles scoring and quetsion tracking and moves to the next question
 function onSubmitBtnClick() {
     // Store the users answer
     let answer = this.parentElement.children[1].value;
@@ -205,7 +266,7 @@ function onSubmitBtnClick() {
     buildQuestion(nextQuestion);
 }
 
-// builds endGame screen
+// Builds endGame screen
 function buildEndGame() {
     // Create the score header
     let scoreEl = document.createElement("h2");
@@ -238,6 +299,7 @@ function buildEndGame() {
 
 }
 
+// Adds initials and score local storage, then moves to high score menu
 function submitInitials() {
     // Get the initials
     let initials = this.parentElement.children[1].value;
@@ -250,7 +312,7 @@ function submitInitials() {
     buildHighScoreMenu();
 }
 
-// TODO: build the high score table
+// Build the high score table
 function buildHighScoreMenu() {
     // Add a header
     let highScoreHeader = document.createElement("h2");
