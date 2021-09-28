@@ -216,7 +216,15 @@ function selectQuestion() {
         question = allQuestions[0];
     }
     else {
-        question = allQuestions[allQuestions.indexOf(lastQuestion)];
+        // Go to the next question. If it's the last question, end the game
+        currentIndex = allQuestions.indexOf(lastQuestion);
+        currentIndex++;
+        if(currentIndex < allQuestions.length){
+            question = allQuestions[currentIndex];
+        }
+        else {
+            endGame();
+        }
     }
 
     questionsGiven.push(question);
