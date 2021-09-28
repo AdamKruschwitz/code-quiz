@@ -234,6 +234,7 @@ function selectQuestion() {
         }
         else {
             endGame();
+            return null; 
         }
     }
 
@@ -264,9 +265,9 @@ function onAnswerBtnClick() {
     // Clear the quiz space
     clearQuiz();
 
-    // Build the next question
+    // Build the next question if one was given
     let nextQuestion = selectQuestion();
-    buildQuestion(nextQuestion);
+    if(nextQuestion) buildQuestion(nextQuestion);
 }
 
 // Takes answer, checks it, then handles scoring and quetsion tracking and moves to the next question
@@ -390,28 +391,39 @@ function buildHighScores() {
 
 // Build review score tabs
 function buildScoreReviewTabs() {
+    // make 2 buttons for review and high score tabs, and set their ids
     let reviewTab = document.createElement("button");
     let scoresTab = document.createElement("button");
+    reviewTab.innerHTML = "Review";
+    scoresTab.innerHTML = "High Scores";
+    reviewTab.setAttribute("id", "review-tab");
+    scoresTab.setAttribute("id", "scores-tab");
 
-    reviewTab.addEventListener("click", function() {
+    // Add event listeners for the buttons
+    reviewTab.addEventListener("click", function(event) {
         if(this.dataset.state != "active") {
             clearQuiz();
-            buildQuestionReview();
+            buildReviewTab();
             this.dataset.state = "active";
+            event.target.parentElement.children[1].dataset.state = "inactive";
         }
     });
 
-    scoresTab.addEventListener("click", function() {
-        if(this.dataset.state != active) {
+    scoresTab.addEventListener("click", function(event) {
+        if(this.dataset.state != "active") {
             clearQuiz();
-            buildQuestionReview();
+            clearReviewQuestionButtons();
+            buildHighScores();
             this.dataset.state = "active";
+            event.target.parentElement.children[0].dataset.state = "inactive";
         }
     });
 
-    reviewTab.dataset.state = "active";
-    scoresTab.dataset.state = "inactive";
+    // Set the initial state of the buttons 
+    reviewTab.dataset.state = "inactive";
+    scoresTab.dataset.state = "active";
 
+    // Add the buttons to the page
     tabsSpace.appendChild(reviewTab);
     tabsSpace.appendChild(scoresTab);
 }
@@ -419,7 +431,8 @@ function buildScoreReviewTabs() {
 
 
 // Build Question review
-function buildQuestionReview() {
+function buildReviewTab() {
+    //
     // Build list of questions given with symbol showing right or wrong
     let questionsEl = document.createElement("ul");
     for(i=0; i<questionsGiven.length; i++) {
@@ -433,6 +446,7 @@ function buildQuestionReview() {
         
         // Set the symbol within the element and styling for correct or incorrect
         let innerText;
+        console.log(questionsGiven);
         if(questionsGiven[i].result == questionsGiven[i].correctAnswer) {
             innerText = "✓";
             questionEl.setAttribute("class", questionEl.getAttribute("class")+" correct")
@@ -447,7 +461,7 @@ function buildQuestionReview() {
     }
 
     // Build the first question and set the first question in the list to be active
-    buildQuestionReview(questionsGiven[0]);
+    buildReviewQuestion(questionsGiven[0]);
     questionsEl.children[0].dataset.state = "active";
 
     // Add the questions to the page
@@ -461,7 +475,12 @@ function onQuestionReviewButtonClick() {
     }
 }
 
+function clearReviewQuestionButtons() {
+    reviewQuestionSpace.innerHTML = "";
+}
+
 // TODO: build the question for review.
 function buildReviewQuestion(question) {
+
 
 }
