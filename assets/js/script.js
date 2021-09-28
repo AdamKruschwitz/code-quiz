@@ -2,6 +2,7 @@
 var quizSpace = window.document.getElementById("quiz");
 var timerSpace = window.document.getElementById("timer");
 var tabsSpace = window.document.getElementById("tabs");
+var reviewQuestionSpace = window.document.getElementById("review-questions");
 var timerValue;
 var timerEl;
 var timerInterval;
@@ -334,6 +335,7 @@ function submitInitials() {
     // BUG: if someone enters the same initials, their score will overwrite the previous.
     localStorage.setItem(initials, score);
 
+    // Build the high score page and set up the tabs for review and high scores
     clearQuiz();
     buildScoreReviewTabs();
     buildHighScores();
@@ -388,10 +390,78 @@ function buildHighScores() {
 
 // Build review score tabs
 function buildScoreReviewTabs() {
+    let reviewTab = document.createElement("button");
+    let scoresTab = document.createElement("button");
 
+    reviewTab.addEventListener("click", function() {
+        if(this.dataset.state != "active") {
+            clearQuiz();
+            buildQuestionReview();
+            this.dataset.state = "active";
+        }
+    });
+
+    scoresTab.addEventListener("click", function() {
+        if(this.dataset.state != active) {
+            clearQuiz();
+            buildQuestionReview();
+            this.dataset.state = "active";
+        }
+    });
+
+    reviewTab.dataset.state = "active";
+    scoresTab.dataset.state = "inactive";
+
+    tabsSpace.appendChild(reviewTab);
+    tabsSpace.appendChild(scoresTab);
 }
+
+
 
 // Build Question review
 function buildQuestionReview() {
+    // Build list of questions given with symbol showing right or wrong
+    let questionsEl = document.createElement("ul");
+    for(i=0; i<questionsGiven.length; i++) {
+        // Create element for styling
+        let questionEl = document.createElement("li");
+        questionEl.setAttribute("class", "question-review-btn");
+
+        // Used for click event
+        questionEl.dataset.state = "inactive"; 
+        questionEl.dataset.question = JSON.stringify(questionsGiven[i]);
+        
+        // Set the symbol within the element and styling for correct or incorrect
+        let innerText;
+        if(questionsGiven[i].result == questionsGiven[i].correctAnswer) {
+            innerText = "✓";
+            questionEl.setAttribute("class", questionEl.getAttribute("class")+" correct")
+        }
+        else {
+            innerText = "X";
+            questionEl.setAttribute("class", questionEl.getAttribute("class")+" incorrect")
+        }
+        questionEl.innerHTML = innerText;
+
+        questionsEl.appendChild(questionEl);
+    }
+
+    // Build the first question and set the first question in the list to be active
+    buildQuestionReview(questionsGiven[0]);
+    questionsEl.children[0].dataset.state = "active";
+
+    // Add the questions to the page
+    reviewQuestionSpace.appendChild(questionsEl);
+}
+
+function onQuestionReviewButtonClick() {
+    if(this.dataset.state != "active") {
+        clearQuiz();
+        buildReviewQuestion(JSON.parse(this.dataset.question));
+    }
+}
+
+// TODO: build the question for review.
+function buildReviewQuestion(question) {
 
 }
