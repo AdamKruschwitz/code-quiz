@@ -4,6 +4,7 @@ var timerSpace = window.document.getElementById("timer");
 var tabsSpace = window.document.getElementById("tabs");
 var timerValue;
 var timerEl;
+var timerInterval;
 var score;
 var questionsGiven;
 var lastQuestion;
@@ -94,28 +95,36 @@ function buildTimer() {
     timerSpace.appendChild(timerEl);
     timerEl.setAttribute("class", "timer");
     timerValue = 60;
-    updateTimer();
+    updateTimerEl();
 
     // Every 1 second, decrease the timer value and update the timer. 
-    var timerInterval = setInterval(function() {
-        timerValue--;
-        updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+}
 
-        //If the timer runs out, end the game.
-        if(timerValue == 0) {
-            endGame();
-            clearInterval(timerInterval);
-        }
-    }, 1000);
+// Runs timer interval to check update display and check for 
+function updateTimer() {
+    timerValue--;
+    updateTimerEl();
+
+    //If the timer runs out, end the game.
+    if(timerValue <= 0) {
+        endGame();
+        clearInterval(timerInterval);
+    }
 }
 
 // Updates timer display
-function updateTimer() {
+function updateTimerEl() {
     timerEl.innerHTML = timerValue;
+}
+
+function removeTimer() {
+    timerEl.innerHTML = "";
 }
 
 // Ends the game and bring up the stats page
 function endGame() {
+    removeTimer();
     clearQuiz();
     buildEndGame();
 }
