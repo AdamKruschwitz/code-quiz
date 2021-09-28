@@ -1,12 +1,13 @@
 // On load, add the main menu to the screen
 var quizSpace = window.document.getElementById("quiz");
+var timerSpace = window.document.getElementById("timer");
+var tabsSpace = window.document.getElementById("tabs");
 var timerValue;
 var timerEl;
 var score;
 var questionsGiven;
-var allQuestions;
 var lastQuestion;
-const questions = [
+const allQuestions = [
     {   // Question 1, assignment operators vs comparison operators
         "type": "multiple-choice",
         "questionText": "Which of the following expressions could assign a new value to i?",
@@ -61,26 +62,26 @@ const questions = [
         "explaination": "Image tags must take their image file path through either the href or src properties. Using src will embed the image in the webpage, and href can be used to link to files hosted elsewhere.",
         "result": "unanswered"
     }
-    
+
 ]
 
 // Test variables ============================================
-var testMultipleChoiceQuestion = {
-    "type": "multiple-choice",
-    "questionText": "which of these is a cheese?",
-    "answers": ["burgandy", "salmon", "gouda", "camero"],
-    "answer": "3",
-    "explaination": "it cheese.",
-    "result": "unanswered"
-}
-var testShortAnswerQuestion = {
-    "type": "short-answer",
-    "questionText": "how many fingers do you have?",
-    "answer": "10",
-    "explaination": "I hope you got 10 fingies!",
-    "result": "unanswered"
-}
-allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
+// var testMultipleChoiceQuestion = {
+//     "type": "multiple-choice",
+//     "questionText": "which of these is a cheese?",
+//     "answers": ["burgandy", "salmon", "gouda", "camero"],
+//     "answer": "3",
+//     "explaination": "it cheese.",
+//     "result": "unanswered"
+// }
+// var testShortAnswerQuestion = {
+//     "type": "short-answer",
+//     "questionText": "how many fingers do you have?",
+//     "answer": "10",
+//     "explaination": "I hope you got 10 fingies!",
+//     "result": "unanswered"
+// }
+// allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
 // ===========================================================
 
 clearQuiz();
@@ -90,7 +91,7 @@ buildStartMenu();
 function buildTimer() {
     // Create a timer and put it on the page
     timerEl = document.createElement("h2");
-    quizSpace.appendChild(timerEl);
+    timerSpace.appendChild(timerEl);
     timerEl.setAttribute("class", "timer");
     timerValue = 60;
     updateTimer();
@@ -210,16 +211,24 @@ function startGame() {
 
 // TODO: Returns a random question that hasn't been given.
 function selectQuestion() {
-    questionsGiven.push(allQuestions[1]);
-    lastQuestion = allQuestions[1];
-    return allQuestions[1];
+    let question;
+    if(!lastQuestion) {
+        question = allQuestions[0];
+    }
+    else {
+        question = allQuestions[allQuestions.indexOf(lastQuestion)];
+    }
+
+    questionsGiven.push(question);
+    lastQuestion = question;
+    return question;
 }
 
 // Takes answer, checks if it's correct, then handles scoring and question tracking and moves to the next question
 function onAnswerBtnClick() {
     // Calculate whether the question was answered correctly
     // console.log(this.dataset.value);
-    let correctAnswer = this.dataset.value === lastQuestion.answer;
+    let correctAnswer = this.dataset.value == lastQuestion["correctAnswer"];
 
     if(correctAnswer) {
         score++;
@@ -309,11 +318,12 @@ function submitInitials() {
     localStorage.setItem(initials, score);
 
     clearQuiz();
-    buildHighScoreMenu();
+    buildScoreReviewTabs();
+    buildHighScores();
 }
 
 // Build the high score table
-function buildHighScoreMenu() {
+function buildHighScores() {
     // Add a header
     let highScoreHeader = document.createElement("h2");
     highScoreHeader.setAttribute("class", "high-score");
@@ -356,5 +366,15 @@ function buildHighScoreMenu() {
     }
 
     quizSpace.appendChild(highScoreTable);
+
+}
+
+// Build review score tabs
+function buildScoreReviewTabs() {
+
+}
+
+// Build Question review
+function buildQuestionReview() {
 
 }
