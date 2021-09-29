@@ -508,8 +508,9 @@ function onQuestionReviewButtonClick(event) {
         clearQuiz();
         buildReviewQuestion(JSON.parse(this.dataset.question));
         // Set other buttons to inactive
+        console.log(event.target.parentElement.children.length);
         for(let i=0; i<event.target.parentElement.children.length; i++) {
-            event.target.parentElement.children[0].dataset.state = "inactive";
+            event.target.parentElement.children[i].dataset.state = "inactive";
         }
         this.dataset.state = "active";
     }
