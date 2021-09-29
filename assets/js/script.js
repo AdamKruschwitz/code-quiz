@@ -52,7 +52,7 @@ const allQuestions = [
     {   // Question 6, variable scope
         "type": "short-answer",
         "questionText": "What is logged to the console when this code is run?<br><code>var temp =\"foo\"2; \nfunction printTemp() {<br>    var temp=\"bar\";<br>    console.log(temp)<br>}<br>\nprintTemp();",
-        "correctAnswer": "2",
+        "correctAnswer": "bar",
         "explaination": "Since the variable temp is created again within the function, it is used instead of the global variable when the function is called.",
         "result": "unanswered"
     },
