@@ -579,4 +579,11 @@ function buildReviewQuestion(question) {
     }
 
     quizSpace.appendChild(answersEl);
+
+    // Add explainations of answers
+    let explainationEl = document.createElement("p");
+    explainationEl.setAttribute("class", "explaination");
+    explainationEl.innerHTML = question.explaination;
+
+    quizSpace.appendChild(explainationEl);
 }

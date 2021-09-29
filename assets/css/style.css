@@ -22,7 +22,7 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    flex: 0 0 60%;
+    width: 80%;
 
     border: 5px solid gray;
     border-radius: 20px;
