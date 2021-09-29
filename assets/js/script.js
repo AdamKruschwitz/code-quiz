@@ -86,8 +86,19 @@ const allQuestions = [
 // allQuestions = [testMultipleChoiceQuestion, testShortAnswerQuestion];
 // ===========================================================
 
+initializeStorage();
 clearQuiz();
 buildStartMenu();
+
+// Initialize storage
+function initializeStorage() {
+    if(!localStorage.getItem("quizScores")) {
+        localStorage.setItem("quizScores", JSON.stringify({
+            players: [],
+            scores: []
+        }));
+    }
+}
 
 // Creates timer element and starts timer.
 function buildTimer() {
@@ -158,7 +169,7 @@ function clearQuiz() {
 function buildQuestion(question) {
     // Build and add the question text
     let questionText = document.createElement("h2");
-    questionText.setAttribute("class", "questionText");
+    questionText.setAttribute("class", "question-text");
     questionText.innerHTML = question.questionText; 
     quizSpace.appendChild(questionText);
 
@@ -334,12 +345,31 @@ function submitInitials() {
 
     // Store the initial/score pair in the local storage
     // BUG: if someone enters the same initials, their score will overwrite the previous.
-    localStorage.setItem(initials, score);
+    recordScore(initials, score);
 
     // Build the high score page and set up the tabs for review and high scores
     clearQuiz();
     buildScoreReviewTabs();
     buildHighScores();
+}
+
+function recordScore(initials, score) {
+    // Load the high score data
+    let scoresObj = JSON.parse(localStorage.getItem("quizScores"));
+
+    // Check if the player is recorded, and if so return their index
+    playerIndex = scoresObj.players.indexOf(initials);
+    // If the player doesn't exist there, add them
+    if(playerIndex === -1 ) {
+        scoresObj.players.push(initials);
+        scoresObj.scores.push(score);
+    }
+    // otherwise, if the recorded score is lower than the given, replace it
+    else if(scoresObj.scores[playerIndex] < score) {
+        scoresObj.scores[playerIndex] = score;
+    }
+
+    localStorage.setItem("quizScores", JSON.stringify(scoresObj));
 }
 
 // Build the high score table
@@ -367,10 +397,12 @@ function buildHighScores() {
 
     highScoreTable.appendChild(firstRow);
 
-    // For each initial/score pair in localStorage, add a row
-    for(let i=0; i<localStorage.length; i++) {
-        let initials = localStorage.key(i);
-        let highScore = localStorage.getItem(initials);
+    // For each initial/score pair in the high scores, add a row
+    let scoresObj = JSON.parse(localStorage.getItem("quizScores"));
+
+    for(let i=0; i<scoresObj.players.length; i++) {
+        let initials = scoresObj.players[i];
+        let highScore = scoresObj.scores[i];
 
         let newRow = document.createElement("tr");
 
@@ -401,6 +433,7 @@ function buildScoreReviewTabs() {
 
     // Add event listeners for the buttons
     reviewTab.addEventListener("click", function(event) {
+        // If the tab isn't active, clear out the score and build the review page.
         if(this.dataset.state != "active") {
             clearQuiz();
             buildReviewTab();
@@ -408,8 +441,8 @@ function buildScoreReviewTabs() {
             event.target.parentElement.children[1].dataset.state = "inactive";
         }
     });
-
     scoresTab.addEventListener("click", function(event) {
+        // If the tab isn't active, clear out the review and build the score page.
         if(this.dataset.state != "active") {
             clearQuiz();
             clearReviewQuestionButtons();
@@ -428,8 +461,6 @@ function buildScoreReviewTabs() {
     tabsSpace.appendChild(scoresTab);
 }
 
-
-
 // Build Question review
 function buildReviewTab() {
     //
@@ -437,7 +468,9 @@ function buildReviewTab() {
     let questionsEl = document.createElement("ul");
     for(i=0; i<questionsGiven.length; i++) {
         // Create element for styling
-        let questionEl = document.createElement("li");
+        let questionParentEl = document.createElement("li");
+        let questionEl = document.createElement("button");
+        questionParentEl.appendChild(questionEl);
         questionEl.setAttribute("class", "question-review-btn");
 
         // Used for click event
@@ -457,6 +490,8 @@ function buildReviewTab() {
         }
         questionEl.innerHTML = innerText;
 
+        questionEl.addEventListener("click", onQuestionReviewButtonClick);
+
         questionsEl.appendChild(questionEl);
     }
 
@@ -468,10 +503,15 @@ function buildReviewTab() {
     reviewQuestionSpace.appendChild(questionsEl);
 }
 
-function onQuestionReviewButtonClick() {
+function onQuestionReviewButtonClick(event) {
     if(this.dataset.state != "active") {
         clearQuiz();
         buildReviewQuestion(JSON.parse(this.dataset.question));
+        // Set other buttons to inactive
+        for(let i=0; i<event.target.parentElement.children.length; i++) {
+            event.target.parentElement.children[0].dataset.state = "inactive";
+        }
+        this.dataset.state = "active";
     }
 }
 
@@ -479,8 +519,64 @@ function clearReviewQuestionButtons() {
     reviewQuestionSpace.innerHTML = "";
 }
 
-// TODO: build the question for review.
+// build the question for review.
 function buildReviewQuestion(question) {
 
+    // Make the question text
+    let questionTextEl = document.createElement("h2");
+    questionTextEl.setAttribute("class", "question-text");
+    questionTextEl.innerHTML = question.questionText;
+    quizSpace.appendChild(questionTextEl);
 
+    // Handle the number of answers for each question type
+    let answersEl = document.createElement("section");
+    answersEl.setAttribute("class", "answers");
+
+    switch(question.type) {
+        case "short-answer":
+            // Short answer questions
+            // Display the given answer and the correct answer.
+            let givenAnswer = question.result;
+            let correctAnswer = question.correctAnswer;
+
+            let givenAnswerEl = document.createElement("span");
+            correctAnswerEl = document.createElement("span");
+            givenAnswerEl.innerHTML = "Given: " + givenAnswer;
+            correctAnswerEl.innerHTML = "Correct: " + correctAnswer;
+            givenAnswerEl.setAttribute("class", "short-answer");
+
+            if(givenAnswer === correctAnswer) {
+                givenAnswerEl.setAttribute("class", givenAnswerEl.getAttribute("class") + " correct");
+            }
+            else {
+                givenAnswerEl.setAttribute("class", givenAnswerEl.getAttribute("class") + " incorrect");
+            }
+            answersEl.appendChild(givenAnswerEl);
+            answersEl.append(correctAnswerEl);
+            break;
+
+        case "multiple-choice":
+            // Multiple choice questions
+            // Display each of the answers, hilighting the correct answer and the chosen answer
+            for(i=0; i<question.answers.length; i++) {
+                let answerBtn = document.createElement("button");
+                answerBtn.setAttribute("class", "review-button");
+                answerBtn.innerHTML = question.answers[i];
+
+                // Add extra styling for correct or incorrect
+                if(i+1 == question.correctAnswer) {
+                    // Add the correct class
+                    answerBtn.setAttribute("class", answerBtn.getAttribute("class") + " correct");
+                }
+                else if (question.result == i+1) {
+                    // Add the incorrect class
+                    answerBtn.setAttribute("class", answerBtn.getAttribute("class") + " incorrect");
+                }
+
+                answersEl.appendChild(answerBtn);
+            }
+            break;
+    }
+
+    quizSpace.appendChild(answersEl);
 }
