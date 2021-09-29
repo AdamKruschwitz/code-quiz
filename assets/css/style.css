@@ -11,7 +11,7 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 
     background-color: var(--lighter);
@@ -23,8 +23,9 @@ body {
     justify-content: flex-start;
     align-items: center;
     width: 80%;
+    min-height: 60%;
 
-    border: 5px solid gray;
+    border: 5px solid var(--light);
     border-radius: 20px;
 }
 
@@ -39,35 +40,49 @@ body {
     /* background-color: navy;
     color:oldlace; */
 
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+code {
+    text-align: left;
+    background-color: lightgray;
+    border: 2px solid var(--light);
+    border-radius: 20px;
+    font-family: monospace;
+    font-size: 18px;
+    line-height: 150%;
+
+    display: block;
+    width: 90%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
 }
 
 .answers {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    width: 90%;
+    margin: 5%;
 }
 
 button {
-
-    background-color: lightgray;
-
-    border: 3px solid gray;
+    background-color: var(--light);
+    color: var(--lighter);
+    border: 2px solid var(--darker);
     border-radius: 15px;
 }
 
 button:hover {
-    background-color: white;
+    background-color: var(--dark);
 }
 
-button:focus {
-    background-color:darkgray;
-}
-
-.answer-btn {
+.answer-btn, .review-button {
     font-size: 20px;
-    flex: 1 0 2%;
-    margin: 2%;
+    flex: 0 0 22%;
+    
 }
 
 .start-btn {
@@ -99,4 +114,46 @@ footer {
     background-color: lightcoral;
     border-color: red;
     color: red;
+}
+
+.question-review-btn {
+    margin: 5px;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+.explaination {
+    width: 90%;
+    font-size: 20px;
+}
+
+.initials-container {
+    margin: 20px;
+}
+
+.short-answer {
+    font-size: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#review-tab, #scores-tab {
+    width: 30%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    font-size: 28px;
+    text-align: center;
+
+    background-color: var(--lighter);
+}
+
+#review-tab:hover, #scores-tab:hover {
+    background-color: var(--light);
+}
+
+#tabs {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
